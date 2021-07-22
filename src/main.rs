@@ -22,8 +22,8 @@ fn main() -> Result<(), TchError> {
     let passes_per_epoch = 100;
     let save_min_interval = 100;
 
-    let input_noise = 1_f64 / (128_f64 * 1024_f64);
-    let output_noise = 1_f64 / 128_f64;
+    let input_noise = 1.0 / (128.0 * 1024.0);
+    let output_noise = 1.0 / 128.0;
 
     let cuda = tch::Cuda::is_available();
     let device = if cuda {
@@ -50,7 +50,7 @@ fn main() -> Result<(), TchError> {
 
     let batch_size = if cuda { 64 * 1024 } else { 128 };
 
-    let lr = 0.00032 * 64_f64 / 128_f64;
+    let lr = 0.00032 * 64.0 / 128.0;
     let mut optimizer = nn::Adam::default().build(&vs, lr)?;
 
     for pic_path in std::env::args().into_iter().skip(1) {

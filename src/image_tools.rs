@@ -7,7 +7,7 @@ pub fn normalize_channel_value<T>(v: T) -> T
 where
     T: Div<f64, Output = T> + Sub<f64, Output = T>,
 {
-    v / 128_f64 - 1_f64
+    v / 128.0 - 1.0
 }
 
 pub fn prepare_image<P: 'static>(image: ImageBuffer<P, Vec<u8>>, device: tch::Device) -> Tensor
@@ -28,10 +28,10 @@ where
 
 pub fn coord(height: usize, width: usize) -> Tensor {
     let mut result = vec![vec![vec![0.0_f32; 2]; width]; height];
-    for y in 0..height.into() {
-        for x in 0..width.into() {
-            result[y][x][0] = x as f32 * 2_f32 / width as f32 - 1_f32;
-            result[y][x][1] = y as f32 * 2_f32 / height as f32 - 1_f32;
+    for y in 0..height {
+        for x in 0..width {
+            result[y][x][0] = x as f32 * 2.0 / width as f32 - 1.0;
+            result[y][x][1] = y as f32 * 2.0 / height as f32 - 1.0;
         }
     }
     let flat: Vec<f32> = result

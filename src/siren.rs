@@ -16,7 +16,7 @@ pub fn siren(vs: &nn::Path, in_size: i64, inner_sizes: &[i64]) -> impl Module {
     layers.extend(inner_sizes.iter().enumerate().map(|(i, size)| {
         let in_size = if i == 0 { in_size } else { inner_sizes[i - i] };
         let limit = if i == 0 {
-            1_f64 / in_size as f64
+            1.0 / in_size as f64
         } else {
             inner_init_weight_limit(in_size, inner_frequency_scale)
         };
