@@ -20,7 +20,7 @@ impl Default for SirenConfig {
 }
 
 impl SirenConfig {
-    fn sound_default() -> Self {
+    pub fn sound_default() -> Self {
         SirenConfig {
             input_frequency_scale: 3000.0,
             inner_frequency_scale: 30.0,

@@ -2,9 +2,17 @@
 name = "siren"
 version = "0.1.0"
 edition = "2018"
+authors = ["Victor Nova <lostfreeman@gmail.com>"]
+description = "SIREN neural network implementation in Rust for PyTorch."
+keywords = ["pytorch", "deep-learning", "machine-learning","signal-processing"]
+categories = ["science"]
+license = "MIT"
+repository = "https://github.com/lostmsu/Siren"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 tch = "0.5.0"
+
+[dev-dependencies]
 image = "0.23.14"

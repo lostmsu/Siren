@@ -1,9 +1,9 @@
 extern crate image;
+extern crate siren;
 extern crate tch;
 
 mod gaussian_noise;
 mod image_tools;
-mod siren;
 mod tensor_tools;
 
 use std::{convert::TryInto, time::SystemTime};
