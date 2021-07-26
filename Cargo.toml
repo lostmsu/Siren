@@ -1,5 +1,5 @@
 [package]
-name = "siren"
+name = "siren-torch"
 version = "0.1.0"
 edition = "2018"
 readme = "README.md"

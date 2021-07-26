@@ -1,5 +1,5 @@
 extern crate image;
-extern crate siren;
+extern crate siren_torch;
 extern crate tch;
 
 mod gaussian_noise;
@@ -10,7 +10,7 @@ use std::{convert::TryInto, time::SystemTime};
 
 use gaussian_noise::gaussian_noise;
 use image_tools::coord;
-use siren::{siren, SirenConfig};
+use siren_torch::{siren, SirenConfig};
 
 use tch::{
     nn::{self, ModuleT, OptimizerConfig},
