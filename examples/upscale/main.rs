@@ -4,6 +4,7 @@ extern crate tch;
 
 mod gaussian_noise;
 mod image_tools;
+#[path = "../common/tensor_tools.rs"]
 mod tensor_tools;
 
 use std::{convert::TryInto, time::SystemTime};
