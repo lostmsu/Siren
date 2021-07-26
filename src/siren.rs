@@ -1,45 +1,83 @@
-use tch::nn;
+use std::borrow::Borrow;
+
+use tch::nn::{self, Linear, Path};
 use tch::nn::{Init, LinearConfig, Module};
+use tch::Tensor;
 
-pub fn siren(vs: &nn::Path, in_size: i64, inner_sizes: &[i64]) -> impl Module {
-    // TODO: parameterize
-    let input_frequency_scale = 30.0;
-    let inner_frequency_scale = 30.0;
+#[derive(Debug, Clone, Copy)]
+pub struct SirenConfig {
+    pub input_frequency_scale: f64,
+    pub inner_frequency_scale: f64,
+}
 
-    if !is_valid_frequency_scale(input_frequency_scale)
-        || !is_valid_frequency_scale(inner_frequency_scale)
+impl Default for SirenConfig {
+    fn default() -> Self {
+        SirenConfig {
+            input_frequency_scale: 30.0,
+            inner_frequency_scale: 30.0,
+        }
+    }
+}
+
+impl SirenConfig {
+    fn sound_default() -> Self {
+        SirenConfig {
+            input_frequency_scale: 3000.0,
+            inner_frequency_scale: 30.0,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct Siren {
+    layers: Vec<Linear>,
+    pub config: SirenConfig,
+}
+
+pub fn siren<'a, T: Borrow<Path<'a>>>(
+    vs: T,
+    in_size: i64,
+    inner_sizes: &[i64],
+    config: SirenConfig,
+) -> Siren {
+    if !is_valid_frequency_scale(config.input_frequency_scale)
+        || !is_valid_frequency_scale(config.inner_frequency_scale)
     {
         panic!()
     };
 
     let mut layers = Vec::new();
-    layers.extend(inner_sizes.iter().enumerate().map(|(i, size)| {
+    for i in 0..inner_sizes.len() {
         let in_size = if i == 0 { in_size } else { inner_sizes[i - i] };
         let limit = if i == 0 {
             1.0 / in_size as f64
         } else {
-            inner_init_weight_limit(in_size, inner_frequency_scale)
+            inner_init_weight_limit(in_size, config.inner_frequency_scale)
         };
         let mut config = LinearConfig::default();
         config.ws_init = Init::Uniform {
             lo: -limit,
             up: limit,
         };
-        nn::linear(vs, in_size, *size, config)
-    }));
+        layers.push(nn::linear(vs.borrow(), in_size, inner_sizes[i], config))
+    }
 
-    nn::func(move |inputs| {
-        let mut outputs = inputs.apply(&layers[0]);
-        outputs *= input_frequency_scale;
+    Siren { layers, config }
+}
+
+impl Module for Siren {
+    fn forward(&self, xs: &Tensor) -> Tensor {
+        let mut outputs = xs.apply(&self.layers[0]);
+        outputs *= self.config.input_frequency_scale;
         outputs = outputs.sin_();
-        for i in 1..layers.len() - 1 {
-            let layer = &layers[i];
+        for i in 1..self.layers.len() - 1 {
+            let layer = &self.layers[i];
             outputs = outputs.apply(layer);
-            outputs *= inner_frequency_scale;
+            outputs *= self.config.inner_frequency_scale;
             outputs = outputs.sin_();
         }
         outputs
-    })
+    }
 }
 
 fn is_valid_frequency_scale(scale: f64) -> bool {

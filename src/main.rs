@@ -10,7 +10,7 @@ use std::{convert::TryInto, time::SystemTime};
 
 use gaussian_noise::gaussian_noise;
 use image_tools::coord;
-use siren::siren;
+use siren::{siren, SirenConfig};
 
 use tch::{
     nn::{self, ModuleT, OptimizerConfig},
@@ -34,7 +34,7 @@ fn main() -> Result<(), TchError> {
 
     let vs = nn::VarStore::new(device);
     let inner_size = 128;
-    let siren_module = siren(&vs.root(), 2, &[inner_size; 4]);
+    let siren_module = siren(&vs.root(), 2, &[inner_size; 4], SirenConfig::default());
 
     let siren = nn::seq_t()
         .add(gaussian_noise(input_noise))
