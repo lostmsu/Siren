@@ -77,10 +77,11 @@ fn main() {
         }
 
         println!(
-            "epoch: {:4} train loss: {:8.5} in {:4}s",
+            "epoch: {:4} train loss: {:8.5} in {:4}s {}ms/batch",
             epoch,
             total_loss / batch_count as f64,
-            epoch_start_time.elapsed().unwrap().as_secs()
+            epoch_start_time.elapsed().unwrap().as_secs(),
+            epoch_start_time.elapsed().unwrap().as_millis() / batch_count as u128,
         );
 
         if total_loss < best_loss {
