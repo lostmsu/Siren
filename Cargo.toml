@@ -10,8 +10,6 @@ categories = ["science"]
 license = "MIT"
 repository = "https://github.com/lostmsu/Siren"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 tch = "0.5.0"
 

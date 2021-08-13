@@ -80,6 +80,12 @@ impl Module for Siren {
     }
 }
 
+impl Siren {
+    pub fn truncate(&mut self, layer_count: usize) {
+        self.layers.truncate(layer_count);
+    }
+}
+
 fn is_valid_frequency_scale(scale: f64) -> bool {
     !f64::is_infinite(scale) && !f64::is_nan(scale) && (scale.abs() > 4.0 * (f32::EPSILON as f64))
 }
